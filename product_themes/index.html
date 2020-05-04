@@ -1,0 +1,113 @@
+<meta charset="UTF-8" />
+<link
+  rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+/>
+<link rel="stylesheet" href="css/main.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<div id="app">
+  <div class="bg-primary">
+    <div class="container">
+      <nav class="navbar navbar-expand navbar-dark bg-primary p-0">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="index.html">Sản phẩm</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Liên hệ</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-9">
+        <div style="display:none">
+          <label class="label-title">Không tìm thấy sản phẩm</label>
+        </div>
+        <ul class="list-unstyled row">
+          <li v-for="p in products" class="list-item col-sm-4 mt-3">
+            <div class="item-container">
+              <a href="product.html" class="product-item">
+                <img :src="API_URL + '/' + p.image" class="product-image" />
+                <div class="item-info">
+                  <div>
+                    <span class="product-name">{{p.name}}</span>
+                  </div>
+                  <div>
+                    <span class="price-title">Giá bán :</span>
+                    <span class="price">{{p.price}} ₫</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="col-3">
+        <div class="mt-5">
+          <label class="label-title">Tên sản phẩm</label>
+          <input v-model="keyword"
+             class="form-control" placeholder="Nhập tên sản phẩm" />
+        </div>
+
+        <div class="mt-4">
+          <label class="label-title">Hãng sản xuất</label>
+          <select v-model="categoryId" class="form-control">
+            <option value="">Tất cả</option>
+            <option v-for="c in categories" 
+                    :value="c.id">{{c.name}}</option>            
+          </select>
+        </div>
+        <div class="mt-4">
+          <label class="label-title">Mức giá</label>
+          <select v-model="priceRange" class="form-control">
+            <option value="">Tất cả</option>
+            <option value="1">Dưới 10 triệu</option>
+            <option value="2">Từ 10 đến 15 triệu</option>
+            <option value="3">Từ 15 đến 20 triệu</option>
+            <option value="4">Trên 20 triệu</option>
+          </select>
+        </div>
+        <br />
+        <button v-on:click="getProducts()" 
+          class="btn btn-primary">Tìm kiếm</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  new Vue({
+    el: "#app" ,
+    data: {
+      keyword: "",
+      categoryId: "",
+      priceRange:"",
+      products: [], 
+      categories: [],
+      API_URL: "http://localhost:8000"
+    } ,
+    created: async function() {
+      await this.getCategories();
+      await this.getProducts();
+    } , 
+    methods : {
+      async getCategories() {
+        var resp = await fetch(this.API_URL + "/get_all_categories");
+        this.categories = await resp.json();
+      },
+      async getProducts() {
+        var url = this.API_URL + "/search_products?"
+                  + "keyword=" + encodeURI(this.keyword)
+                  + "&categoryId=" + this.categoryId
+                  + "&priceRange=" + this.priceRange;
+        //alert(url);
+        var resp = await fetch(url);
+        this.products = await resp.json();
+      }
+    }
+  })
+</script>
