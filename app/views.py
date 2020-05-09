@@ -3,17 +3,18 @@ from rest_framework.decorators import api_view
 from .models import *
 from .serializers import *
 
-@api_view(["GET"])
-def hello(request):
-    return Response({"message": "Hello"})
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def getAllCategories(request):
     lst = Category.objects.all()
     serializer = CategorySerializer(lst, many=True)
     return Response(serializer.data)
 
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def searchProducts(request):
     productList = Product.objects.all()
     queryParams = request.GET
@@ -45,3 +46,16 @@ def searchProducts(request):
 
     serializer = ProductSerializer(productList, many=True)
     return Response(serializer.data)
+
+@api_view(["GET"])
+def hello(request):
+    return Response({"message": "Hello"})
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def getProduct(request, id):
+    product = Product.objects.get(pk=id)
+    serializer = ProductSerializer(product)
+    return Response(serializer.data)
+

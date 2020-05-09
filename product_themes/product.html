@@ -1,48 +1,64 @@
 <meta charset="UTF-8">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" >
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 <div id="app">
-    <div class="bg-primary">
-        <div class="container">
-            <nav class="navbar navbar-expand navbar-dark bg-primary p-0">
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="index.html">Sản phẩm</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Liên hệ</a>
-                    </li>
-                </ul>                
-            </nav>
-        </div>
+  <div class="bg-primary">
+    <div class="container">
+      <nav class="navbar navbar-expand navbar-dark bg-primary p-0">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="index.html">Sản phẩm</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Liên hệ</a>
+          </li>
+        </ul>
+      </nav>
     </div>
+  </div>
 
-    <div class='container'>
-        <div class="row">
-            <div class="col-6">
-                <image class='product-detail-image' src="images/ASUS_0008.jpg">            
-            </div>
-            
-            <div class="col-6 mt-5">
-                <div class='product-detail-title'>Asus TP412FA-EC121T</div>
-                <br>
-                <table class="table">
-                    <tr>
-                        <td>Hãng sản xuất:</td>
-                        <td>Asus</td>
-                    </tr>
-                    <tr>
-                        <td>Đặc điểm:</td>
-                        <td>Sản phẩm mới 2020</td>
-                    </tr>                    
-                    <tr>
-                        <td>Giá bán:</td>
-                        <td><b>13.599.000 ₫</b></td>
-                    </tr>
-                </table>
-                <br>
-                <a class="btn btn-secondary" href="index.html">Quay lại</a>    
-                <a class="btn btn-primary" href="purchase.html">Mua hàng</a>
-            </div>
-        </div>    
+  <div class='container'>
+    <div class="row">
+      <div class="col-6">
+        <image class='product-detail-image' src="images/ASUS_0008.jpg">
+      </div>
+
+      <div class="col-6 mt-5">
+        <div class='product-detail-title'>Asus TP412FA-EC121T</div>
+        <br>
+        <table class="table">
+          <tr>
+            <td>Hãng sản xuất:</td>
+            <td>Asus</td>
+          </tr>
+          <tr>
+            <td>Đặc điểm:</td>
+            <td>Sản phẩm mới 2020</td>
+          </tr>
+          <tr>
+            <td>Giá bán:</td>
+            <td><b>13.599.000 ₫</b></td>
+          </tr>
+        </table>
+        <br>
+        <a class="btn btn-secondary" href="index.html">Quay lại</a>
+        <a class="btn btn-primary" href="purchase.html">Mua hàng</a>
+      </div>
     </div>
+  </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  new Vue({
+    el: "#app",
+    data: {product: {} },
+    async created() {
+      var pos = location.href.lastIndexOf("?id=");
+      if(pos >= 0) {
+        var id = location.href.substring(pos+4);
+        var headers = {'Authorization': 'Bearer ' + localStorage.getItem('token')};
+        var resp = await fetch("http://localhost:8000/product/" + id, {headers});
+        this.product = await resp.json();
+      }
+    }
+  })
+</script>
