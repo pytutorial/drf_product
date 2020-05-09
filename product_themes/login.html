@@ -59,7 +59,9 @@
           headers: {"Content-Type": "application/json"}
         });
         var result = await resp.json();
-        alert(result.access);
+        localStorage.setItem("token", result.access);
+        //alert(result.access);
+        location.href = "index.html";
       }
     }
   })

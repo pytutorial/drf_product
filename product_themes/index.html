@@ -95,18 +95,22 @@
       await this.getProducts();
     } , 
     methods : {
+      async get(url) {
+        var headers = {"Authorization": "Bearer " 
+                        + localStorage.getItem("token")};
+        var resp = await fetch(url, {headers: headers});
+        return await resp.json();
+      },
       async getCategories() {
-        var resp = await fetch(this.API_URL + "/get_all_categories");
-        this.categories = await resp.json();
+        this.categories = 
+          await this.get(this.API_URL + "/get_all_categories");
       },
       async getProducts() {
         var url = this.API_URL + "/search_products?"
                   + "keyword=" + encodeURI(this.keyword)
                   + "&categoryId=" + this.categoryId
                   + "&priceRange=" + this.priceRange;
-        //alert(url);
-        var resp = await fetch(url);
-        this.products = await resp.json();
+        this.products = await this.get(url);
       }
     }
   })
