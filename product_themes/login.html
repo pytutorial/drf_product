@@ -14,7 +14,6 @@
     padding: 20px;
     margin: 150 auto 0 auto;
   }
-
 </style>
 
 <div id="app" class="bg-login">
@@ -47,14 +46,21 @@
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
-    new Vue({
-        el: "#app",
-        data: {username: "", password: ""},
-        methods : {
-            async login() {
-                alert('username:' + this.username + ", password:"
-                        + this.password);
-            }
-        }
-    })
+  new Vue({
+    el: "#app",
+    data: { username: "", password: "" },
+    methods: {
+      async login() {
+        var body = {username: this.username, password: this.password};
+        var resp = await fetch("http://localhost:8000/api/token",
+        {
+          body: JSON.stringify(body), 
+          method: "POST",
+          headers: {"Content-Type": "application/json"}
+        });
+        var result = await resp.json();
+        alert(result.access);
+      }
+    }
+  })
 </script>
